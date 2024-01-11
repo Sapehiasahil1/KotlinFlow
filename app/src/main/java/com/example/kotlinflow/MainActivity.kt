@@ -19,12 +19,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     val channel = Channel<Int>()
+
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,49 +42,82 @@ class MainActivity : ComponentActivity() {
                 //producer()
                 //consumer()
 
-                val job = GlobalScope.launch {
-                    val data : Flow<Int> = producer()
-                    data.collect{
-                        Log.d("SAHIL-1", it.toString())
-                    }
-                }
+                //val job = GlobalScope.launch {
+                //    val data : Flow<Int> = producer()
+                //        //This function is called to run the code that you want to execute before the start
+                //       //of the flow.
+                //        .onStart {
+                //            Log.d("SAHIL","Starting out")
+                //        }
+                //        //This function is called to run the code that you want to execute after the
+                //        //completion of the flow.
+                //        .onCompletion {
+                //            Log.d("SAHIL", "Completed")
+                //        }
+                //        //This function is called to run the code that you want to execute after
+                //        //each iteration.
+                //       .onEach {
+                //            Log.d("SAHIL","About to emit -> $it")
+                //        }
+                //    data.collect{
+                //        Log.d("SAHIL", it.toString())
+                //    }
+                //}
+
                 //This will cancel the above consumer running in coroutine after 3500ms.
                 //GlobalScope.launch {
                 //    delay(3500)
                 //    job.cancel()
                 //}
-                GlobalScope.launch {
-                    val data : Flow<Int> = producer()
-                    delay(3500)
-                    data.collect {
-                        Log.d("SAHIL-2", it.toString())
-                    }
+                //GlobalScope.launch {
+                //    val data : Flow<Int> = producer()
+                //    delay(3500)
+                //    data.collect {
+                //        Log.d("SAHIL-2", it.toString())
+                //    }
+
+                //Non-Terminal Operator
+                GlobalScope.launch(Dispatchers.Main) {
+
+                    producer()
+                        .map {
+                            it * 2
+                        }
+                        .filter {
+                            it < 8
+                        }
+                        .buffer(3)
+                        .collect {
+                            delay(1500)
+                            Log.d("SAHIL", it.toString())
+                        }
                 }
             }
         }
     }
-
-    fun producer() = flow<Int> {
-        val list = listOf<Int>(1,2,3,4,5,6,7,8,9,10)
-
-        list.forEach {
-            delay(1000)
-            emit(it)
-        }
-    }
-    /*
-    fun producer() {
-        CoroutineScope(Dispatchers.Main).launch {
-            channel.send(1)
-            channel.send(2)
-        }
-    }
-
-    fun consumer() {
-        CoroutineScope(Dispatchers.Main).launch {
-            Log.d("SAHIL", channel.receive().toString())
-            Log.d("SAHIL", channel.receive().toString())
-        }
-    }
-    */
 }
+
+fun producer() = flow<Int> {
+    val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+    list.forEach {
+        delay(1000)
+        emit(it)
+    }
+}
+
+/*
+fun producer() {
+    CoroutineScope(Dispatchers.Main).launch {
+        channel.send(1)
+        channel.send(2)
+    }
+}
+
+fun consumer() {
+    CoroutineScope(Dispatchers.Main).launch {
+        Log.d("SAHIL", channel.receive().toString())
+        Log.d("SAHIL", channel.receive().toString())
+    }
+}
+*/

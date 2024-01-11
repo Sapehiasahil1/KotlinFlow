@@ -31,4 +31,20 @@ package com.example.kotlinflow
 
     *The kotlin flows cancel themselves when there is no consumer. So, if you want to cancel flow, cancel the
     consumer by stopping the coroutine in which it is consuming.
+
+    #Methods in Kotlin Flows
+    * These are used to run the manual code that user want to execute during the flow emit and collect process.
+    1. onStart -> called when flow is going to start
+    2. onCompletion -> called when flow is completed
+    3. onEach -> called when flow is going to emit in each iteration.
+
+    #Operators in Kotlin Flows
+    1. Terminal Operator -> They have the suspend keyword ahead of the fun keyword.
+    eg: collect, first, toList
+
+    2. Non-terminal Operator
+    eg: map, filter, buffer
+    * For starting the flow, we require a Terminal Operator.
+    * If the producer is producing at more speed than consumer, then we add buffer in the producer.
+
  */
