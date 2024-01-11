@@ -47,4 +47,14 @@ package com.example.kotlinflow
     * For starting the flow, we require a Terminal Operator.
     * If the producer is producing at more speed than consumer, then we add buffer in the producer.
 
+    #Flow Context
+    * Generally where the flow is being collected, on the same thread the flow is being emitted also.
+    But if we want, that collection should take place on different thread and emission should take place on
+    different thread. Then we can use
+     "" Flow On""
+    * We can also use multiple flowOn s.
+
+    #Exception Handling
+    * In order to handle the exception in the flow, we can use .catch operator.
+
  */

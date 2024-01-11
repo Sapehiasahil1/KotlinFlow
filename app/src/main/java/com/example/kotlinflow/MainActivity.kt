@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -39,9 +40,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             KotlinFlowTheme {
 
+
+                //Channels
                 //producer()
                 //consumer()
 
+                //Methods
                 //val job = GlobalScope.launch {
                 //    val data : Flow<Int> = producer()
                 //        //This function is called to run the code that you want to execute before the start
@@ -76,22 +80,44 @@ class MainActivity : ComponentActivity() {
                 //        Log.d("SAHIL-2", it.toString())
                 //    }
 
-                //Non-Terminal Operator
-                GlobalScope.launch(Dispatchers.Main) {
 
+                //Non-Terminal Operator
+                //GlobalScope.launch(Dispatchers.Main) {
+//                    producer()
+//                        .map {
+//                            it * 2
+//                        }
+//                        .filter {
+//                            it < 8
+//                        //}
+//                //        .buffer(3)
+//                 //       .collect {
+//                 //           delay(1500)
+//                 //           Log.d("SAHIL", it.toString())
+//                 //       }
+//                //}
+
+                //FlowOn - Context Preservation
+                // All the functions above the flowOn method will run on the IO thread [As in the case]
+                GlobalScope.launch(Dispatchers.Main) {
                     producer()
                         .map {
-                            it * 2
+                            delay(1000)
+                            it *2
+                            Log.d("SAHIL", "Map Thread :-${Thread.currentThread().name}")
                         }
                         .filter {
+                            delay(1000)
+                            Log.d("SAHIL","Filter Thread :- ${Thread.currentThread().name}")
                             it < 8
                         }
-                        .buffer(3)
+                        .flowOn(Dispatchers.IO)
                         .collect {
-                            delay(1500)
-                            Log.d("SAHIL", it.toString())
+                            Log.d("SAHIL", "Collector Thread :- ${Thread.currentThread().name}")
                         }
                 }
+
+
             }
         }
     }
@@ -102,8 +128,10 @@ fun producer() = flow<Int> {
 
     list.forEach {
         delay(1000)
+        Log.d("SAHIL", "Emitter Thread :- ${Thread.currentThread().name}")
         emit(it)
     }
+
 }
 
 /*
