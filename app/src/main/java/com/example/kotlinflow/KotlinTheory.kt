@@ -22,4 +22,13 @@ package com.example.kotlinflow
 
     R:2 Manual Close :- In case of hot stream, we need to manually close them but in case of cold stream
     the streams are closed automatically.
+
+    R:3 Independent Flow :- Suppose if there are multiple consumer on the same producer and one consumer start
+    consuming the data after some amount of time than the another consumer. So in case of flows, both the
+    consumers will get the complete data as they are independent to each other.
+    But in case of channel, if one channel starts consuming late as compared to the another consumer, than the
+    late consumer will not get the data that has been produced before its consumption starts.
+
+    *The kotlin flows cancel themselves when there is no consumer. So, if you want to cancel flow, cancel the
+    consumer by stopping the coroutine in which it is consuming.
  */
