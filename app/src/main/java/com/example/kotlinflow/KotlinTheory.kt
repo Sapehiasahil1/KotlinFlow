@@ -58,9 +58,22 @@ package com.example.kotlinflow
     * In order to handle the exception in the flow, we can use .catch operator.
 
     #Shared Flow
+    * In shared flow multiple consumers are sharing the flow.
     * These are hot in nature.
     * There are two classes to implement shared flow:-
         1. Mutable Shared Flow
         2. Shared Flow
+
+    #State Flow
+    * It is a variant of shared flow which is hot in nature. And here also multiple consumers are sharing
+    the flow. But in the case of state flow, the flow maintains the latest or you can say the last value as
+    the state.
+    *.value
+
+    #Diff b/w LiveData v/s State Flow
+    1. All the transformations such as map, filter in Live Data takes place on the main thread but in
+    case of FLow we can use .flowOn to do transformations on different thread.
+    2. The no. of operators in Live Data are very less as compared to Flows.
+    3. The Live Data is lifecycle dependent but Flows are not lifecycle dependent.
 
  */

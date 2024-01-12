@@ -20,6 +20,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -123,6 +124,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//State Flow
+private fun producer() : Flow<Int> {
+
+    // value refers to the initial value that the state contains.
+    val mutableStateFlow = MutableStateFlow<Int>(10)
+
+    GlobalScope.launch {
+        delay(1000)
+        mutableStateFlow.emit(20)
+        delay(1000)
+        mutableStateFlow.emit(30)
+    }
+    return mutableStateFlow
+}
+/*
 //Shared Flow
 private fun producer() : Flow<Int> {
     //replay is used to provide the count of values that has been emitted
@@ -138,7 +155,10 @@ private fun producer() : Flow<Int> {
 
     return mutableSharedFlow
 }
+*/
+
 /*
+    //Flow using flow builder
 fun producer() = flow<Int> {
     val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
