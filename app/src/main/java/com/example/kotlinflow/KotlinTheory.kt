@@ -57,4 +57,10 @@ package com.example.kotlinflow
     #Exception Handling
     * In order to handle the exception in the flow, we can use .catch operator.
 
+    #Shared Flow
+    * These are hot in nature.
+    * There are two classes to implement shared flow:-
+        1. Mutable Shared Flow
+        2. Shared Flow
+
  */

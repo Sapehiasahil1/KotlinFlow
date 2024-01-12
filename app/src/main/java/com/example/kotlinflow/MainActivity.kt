@@ -19,6 +19,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
@@ -122,7 +123,22 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+//Shared Flow
+private fun producer() : Flow<Int> {
+    //replay is used to provide the count of values that has been emitted
+    //but you want that the consumer who joined new should also receive.
+    val mutableSharedFlow = MutableSharedFlow<Int>(3)
+    GlobalScope.launch {
+        val list = listOf(1,2,3,4,5)
+        list.forEach {
+            mutableSharedFlow.emit(it)
+            delay(1000)
+        }
+    }
 
+    return mutableSharedFlow
+}
+/*
 fun producer() = flow<Int> {
     val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
@@ -133,6 +149,7 @@ fun producer() = flow<Int> {
     }
 
 }
+*/
 
 /*
 fun producer() {
